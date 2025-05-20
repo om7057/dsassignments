@@ -1,0 +1,72 @@
+#include<iostream>
+using namespace std;
+
+class Stack {
+private:
+    int* arr; 
+    int capacity; 
+    int top; 
+
+public:
+    Stack(int size) {
+        capacity = size;
+        arr = new int[capacity];
+        top = -1;
+    }
+
+    ~Stack() {
+        delete[] arr;
+    }
+
+    void push(int data) {
+        if (isFull()) {
+            cout << "OVERFLOW" << endl;
+            return;
+        }
+        arr[++top] = data;     }
+
+
+    int pop() {
+        if (isEmpty()) {
+            cout << "UNDERFLOW" << endl;
+            return -1; 
+        }
+        return arr[top--]; 
+    }
+
+    
+    bool isEmpty() {
+        return top == -1;
+    }
+
+    bool isFull() {
+        return top == capacity - 1;
+    }
+};
+
+int main() {
+    Stack stack(5);
+
+    stack.push(1);
+    stack.push(2);
+    stack.push(3);
+    stack.push(4);
+
+    cout << "Stack Elements: ";
+    while (!stack.isEmpty()) {
+        cout << stack.pop() << " "; 
+    }
+    cout << endl;
+
+    stack.push(5);
+    stack.push(6);
+
+    cout << "Stack Elements: ";
+    while (!stack.isEmpty()) {
+        cout << stack.pop() << " ";
+    }
+    cout << endl;
+    
+
+    return 0;
+}

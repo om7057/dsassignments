@@ -1,0 +1,179 @@
+#include <iostream>
+using namespace std;
+
+class node {
+public:
+    int data;
+    node* next;
+    node* prev;
+
+    node(int data) {
+        this->data = data;
+        this->next = NULL;
+        this->prev = NULL;
+    }
+
+    ~node() {
+        cout << "Free " << data << endl;
+    }
+};
+
+void print(node* head) {
+    node* temp = head;
+    while (temp != NULL) {
+        cout << temp->data << " ";
+        temp = temp->next;
+    }
+    cout << endl;
+}
+
+void insertatfront(node* &head, int d) {
+    node* ptr = new node(d);
+    ptr->next = head;
+    if (head != NULL) {
+        head->prev = ptr;
+    }
+    head = ptr;
+}
+
+void insertatEnd(node* &head, int d) {
+    node* temp = head;
+    node* ptr = new node(d);
+
+    if (temp == NULL) { 
+        head = ptr;
+        return;
+    }
+
+    while (temp->next != NULL) {
+        temp = temp->next;
+    }
+
+    temp->next = ptr;
+    ptr->prev = temp;
+}
+
+void insertatpos(node* &head, int d, int pos) {
+    if (pos <= 0) {
+        cout << "Invalid position" << endl;
+        return;
+    }
+
+    if (pos == 1 || head == NULL) { 
+        insertatfront(head, d);
+        return;
+    }
+
+    node* temp = head;
+    node* ptr = new node(d);
+
+    int count = 1;
+    while (count < pos - 1 && temp->next != NULL) {
+        temp = temp->next;
+        count++;
+    }
+
+    ptr->next = temp->next;
+    if (temp->next != NULL) {
+        temp->next->prev = ptr;
+    }
+    temp->next = ptr;
+    ptr->prev = temp;
+}
+
+void deleteNode(node* &head, int value) {
+    if (head == NULL) {
+        return;
+    }
+
+    if (head->data == value) {
+        node* temp = head;
+        head = head->next;
+        if (head != NULL) {
+            head->prev = NULL;
+        }
+        delete temp;
+        return;
+    }
+
+    node* current = head;
+    while (current != NULL && current->data != value) {
+        current = current->next;
+    }
+
+    if (current == NULL) {
+        cout << "Node with value " << value << " not found." << endl;
+        return;
+    }
+
+    if (current->prev != NULL) {
+        current->prev->next = current->next;
+    }
+    if (current->next != NULL) {
+        current->next->prev = current->prev;
+    }
+
+    delete current;
+}
+
+int main() {
+    node* head = nullptr;
+
+    int choice;
+    int data, pos, value;
+
+    do {
+        cout << "Choose an operation:\n";
+        cout << "1. Insert at Front\n";
+        cout << "2. Insert at End\n";
+        cout << "3. Insert at Position\n";
+        cout << "4. Delete Node\n";
+        cout << "5. Print List\n";
+        cout << "0. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                cout << "Enter data to insert at the front: ";
+                cin >> data;
+                insertatfront(head, data);
+                break;
+
+            case 2:
+                cout << "Enter data to insert at the end: ";
+                cin >> data;
+                insertatEnd(head, data);
+                break;
+
+            case 3:
+                cout << "Enter data to insert: ";
+                cin >> data;
+                cout << "Enter position: ";
+                cin >> pos;
+                insertatpos(head, data, pos);
+                break;
+
+            case 4:
+                cout << "Enter value to delete: ";
+                cin >> value;
+                deleteNode(head, value);
+                break;
+
+            case 5:
+                cout << "Linked List: ";
+                print(head);
+                cout << endl;
+                break;
+
+            case 0:
+                cout << "Exiting the program.\n";
+                break;
+
+            default:
+                cout << "Invalid choice. Please try again.\n";
+        }
+    } while (choice != 0);
+
+    return 0;
+}

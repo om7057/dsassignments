@@ -1,0 +1,1 @@
+insertatfront(head,1221);
